@@ -7,7 +7,6 @@ Este repositório documenta a Fase 2 do projeto de **Sistema de Irrigação Inte
 O objetivo é monitorar em tempo real fatores críticos do solo — **Umidade**, **pH** e a presença de **Nutrientes (NPK)** — para acionar de forma autônoma um sistema de irrigação, garantindo a saúde da lavoura e a economia de recursos hídricos.
 
 **➡️ Link para o Projeto no Wokwi:** https://wokwi.com/projects/444184023624515585
-
 ---
 
 ## 2. 🔌 Componentes e Hardware Simulado
@@ -82,4 +81,4 @@ A imagem abaixo ilustra as conexões físicas entre o ESP32 e os componentes no 
 * **Victor Araujo Ferreira da Silva** - Engenheiro de softwere 
 * **Filipe Marques Previato** - Engenheiro de softwere 2
 * **Pedro Zanon Castro Santana** - Engenheiro de Hardwere
-* **Jonathan Gomes Ribeiro Franco** - tester 
+* **Jonathan Gomes Ribeiro Franco** - tester/videomaker
