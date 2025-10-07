@@ -1,75 +1,84 @@
 # 🌿 FarmTech Solutions - Sistema de Irrigação Inteligente (Fase 2)
 
-## 1. Introdução ao Projeto
+## 1. Visão Geral do Projeto
 
-Este repositório contém o código-fonte e a documentação do projeto de **Sistema de Irrigação Inteligente** desenvolvido pela equipe da FarmTech Solutions, utilizando o ESP32 na plataforma de simulação **Wokwi.com**.
+Este repositório documenta a Fase 2 do projeto de **Sistema de Irrigação Inteligente**, desenvolvido pela FarmTech Solutions. O sistema utiliza um microcontrolador ESP32, simulado na plataforma **Wokwi.com**, para otimizar o uso da água na agricultura.
 
-O objetivo principal é simular o monitoramento em tempo real de fatores críticos da agricultura — **Umidade do Solo**, **pH do Solo**, e níveis de **Nutrientes NPK** — para acionar um sistema de irrigação automatizado (Relé/Bomba d'água).
+O objetivo é monitorar em tempo real fatores críticos do solo — **Umidade**, **pH** e a presença de **Nutrientes (NPK)** — para acionar de forma autônoma um sistema de irrigação, garantindo a saúde da lavoura e a economia de recursos hídricos.
 
-**Link do Projeto Wokwi:** [https://wokwi.com/projects/444184023624515585](https://wokwi.com/projects/444184023624515585)
-
-## 2. Componentes e Simulações Didáticas
-
-Devido às limitações de hardware de simulação, foram utilizadas as seguintes substituições didáticas, conforme a especificação do projeto:
-
-| Componente Real | Simulação Wokwi | Pino (GPIO) | Tipo de Sinal | Função |
-| :--- | :--- | :--- | :--- | :--- |
-| **Sensor de Umidade do Solo** | Sensor **DHT22** (Umidade do Ar) | `15` | Digital | Mede a umidade do solo (%). |
-| **Sensor de pH do Solo** | Sensor **LDR** (Intensidade de Luz) | `34` | Analógico (ADC) | Simula a escala contínua de pH (0-4095). |
-| **Nutrientes (N, P, K)** | **3 Botões** (Verdes) | `21`, `22`, `23` | Digital (INPUT_PULLUP) | Nível "Tudo ou Nada" (Pressionado = Presente). |
-| **Bomba D'água** | **Módulo Relé** (Atuador) | `4` | Saída Digital | Liga/Desliga a irrigação. |
+**➡️ Link para o Projeto no Wokwi:** https://wokwi.com/projects/444184023624515585
 
 ---
 
-## 3. Lógica de Controle de Irrigação
+## 2. 🔌 Componentes e Hardware Simulado
 
-O sistema foi otimizado para a cultura de **[INSIRA A CULTURA ESCOLHIDA AQUI, EX: CULTURA DO MILHO]**.
+Devido às limitações da plataforma de simulação, utilizamos componentes análogos para representar sensores agrícolas, conforme a tabela abaixo:
 
-Nossa lógica de decisão para acionar a bomba d'água é baseada em uma combinação das condições ideais, priorizando a economia de água.
-
-A irrigação (Relé) será acionada somente se **TODAS** as seguintes condições forem verdadeiras:
-
-1.  **UMIDADE BAIXA:** A umidade do solo lida pelo DHT22 for **abaixo de [INSIRA A UMIDADE MÍNIMA, EX: 45.0] %**.
-2.  **pH ADEQUADO:** O nível de pH (LDR) estiver **dentro da faixa ideal** para a cultura, entre **[INSIRA O VALOR MÍNIMO LDR, EX: 1500]** e **[INSIRA O VALOR MÁXIMO LDR, EX: 2500]**.
-3.  **NUTRIENTES:** O Nutriente **[INSIRA UM NUTRIENTE CHAVE, EX: Fósforo (P)]** estiver em nível adequado (Botão P **Pressionado**).
-
-*( **Nota para a Entrega:** Adapte o código C/C++ (bloco `void loop()`) para refletir esta lógica exatamente, substituindo os valores e a regra de controle. )*
+| Componente Real | Simulação no Wokwi | Pino (GPIO) | Função no Projeto |
+| :--- | :--- | :--- | :--- |
+| **Sensor de Umidade do Solo** | Sensor **DHT22** | `15` | Mede a umidade em tempo real (%). |
+| **Sensor de pH do Solo** | Sensor **LDR** (Resistor Dependente de Luz) | `34` (ADC) | Simula a escala de pH através de um valor analógico (0-4095). |
+| **Alerta de Nutrientes (N, P, K)** | **3x Botões** | `21`, `22`, `23` | Simulam um **alerta de deficiência**. Pressionar um botão indica que o nutriente correspondente está em falta. |
+| **Bomba D'água** | **Módulo Relé** | `4` | Atua como um interruptor para ligar ou desligar a irrigação. |
 
 ---
 
-## 4. Estrutura do Código (Pessoa 2 - Desenvolvedor de Software)
+## 3. 🧠 Lógica de Controle Inteligente
 
-O código C/C++ (`sketch.ino`) é organizado em funções claras para monitoramento e controle:
+O sistema foi otimizado para a cultura de **Alface (Lactuca sativa)**, que prospera em solo consistentemente úmido e com pH próximo da neutralidade.
 
-* **`lerUmidade()`:** Utiliza a biblioteca DHT para obter o percentual de umidade.
-* **`lerNivelPH_LDR()`:** Lê o valor analógico (0-4095) do GPIO 34 (LDR).
-* **`lerBotao(pino)`:** Retorna `true` se o botão de nutriente for pressionado (`LOW` devido ao PULLUP).
-* **`controlarBomba(bool ligar)`:** Gerencia o estado do Relé (GPIO 4), ligando (`HIGH`) ou desligando (`LOW`) a bomba.
-* **Monitor Serial:** Todos os dados lidos (Umidade, pH, Status NPK) e as ações de controle são exibidas no Monitor Serial para fins de debug e validação da equipe.
+A nossa lógica de decisão é conservadora e inteligente, garantindo que a irrigação só ocorra sob condições ideais para não prejudicar o solo ou a planta.
 
----
+> **Regra Principal:** A irrigação (Relé) será acionada **SE E SOMENTE SE** todas as condições a seguir forem verdadeiras simultaneamente:
 
-## 5. Diagrama de Conexão
+1.  **Solo Seco:** A umidade lida pelo DHT22 for **inferior a 60%**.
+2.  **pH Ideal:** O nível de pH simulado pelo LDR estiver na faixa ideal, entre **1500 e 2500**.
+3.  **Solo Saudável:** **NENHUM** botão de alerta de deficiência de nutriente (N, P ou K) estiver pressionado.
 
-Segue o diagrama do circuito montado no Wokwi, que ilustra as conexões entre o ESP32 e os sensores/atuadores:
-
-**[INSERIR IMAGEM DO CIRCUITO AQUI]**
-*(Recomendação: Substitua esta linha pela imagem do circuito Wokwi.com conforme o entregável da Pessoa 1.)*
+Se qualquer uma dessas condições não for atendida, a irrigação é interrompida ou permanece desligada.
 
 ---
 
-## 6. Opcionais Implementados (Ir Além)
+## 4. 🏗️ Estrutura do Código (`sketch.ino`)
 
-* **[Deixe esta seção vazia ou remova se nenhum opcional for implementado.]**
-* **Opcional 1 (Integração Python/API):** *[Descreva aqui o que foi feito, ex: O script Python (`api_clima.py`) foi utilizado para consultar a previsão de chuva da OpenWeather. Este dado é inserido manualmente no código C++ via variável.]*
-* **Opcional 2 (Análise em R):** *[Descreva aqui a análise estatística implementada, ex: Um script R (`analise_umidade.R`) foi usado para calcular a média histórica de umidade, e o resultado influencia a faixa de acionamento da bomba.]*
+O código em C++/Arduino foi estruturado para ser legível e modular:
+
+* **Definições (`#define`):** No topo do arquivo, todos os pinos dos componentes são mapeados para nomes fáceis de entender (ex: `BOMBA_PIN`), facilitando a manutenção.
+* **`setup()`:** Prepara o ambiente, iniciando a comunicação Serial, o sensor DHT e configurando os pinos (`pinMode`) como entrada (`INPUT_PULLUP` para os botões) ou saída (`OUTPUT` para o relé).
+* **`controlarBomba(bool ligar)`:** Uma função auxiliar que abstrai o controle do relé. Ela recebe `true` para ligar a bomba ou `false` para desligar, além de imprimir o status da ação no monitor.
+* **`loop()`:** O coração do sistema. A cada 2 segundos, ele executa o ciclo:
+    1.  **Lê** os dados de todos os sensores (DHT, LDR, Botões).
+    2.  **Exibe** os dados brutos no Monitor Serial para depuração.
+    3.  **Decide**, com base na lógica de controle (Seção 3), se a bomba deve ser ligada ou desligada.
+    4.  **Age**, chamando a função `controlarBomba()` para executar a decisão.
 
 ---
 
-## 7. Como Executar e Testar
+## 5. 📈 Diagrama de Conexão do Circuito
 
-1.  Acesse o link do projeto Wokwi.
-2.  Verifique se a biblioteca **DHT sensor library** (Adafruit) está instalada no **Library Manager**.
-3.  Inicie a simulação (botão **Play**).
-4.  Abra o **Monitor Serial** e observe o fluxo de dados.
-5.  **Validação:** Interaja com os *sliders* do **LDR** e do **DHT22**, e clique nos **Botões N, P e K** para validar que o **Relé** só é acionado quando as condições da Lógica de Controle (Seção 3) são satisfeitas.
+A imagem abaixo ilustra as conexões físicas entre o ESP32 e os componentes no ambiente de simulação Wokwi.
+
+<img width-="1062" height="657" alt="image" src="https://github.com/user-attachments/assets/b6ba827b-dcdc-4715-bdb4-8e80bf9121ac" />
+
+---
+
+## 6. 🚀 Como Executar e Testar o Projeto
+
+1.  Acesse o **link do projeto** na seção 1.
+2.  No Wokwi, abra a aba **`Library Manager`** e confirme que a biblioteca **"DHT sensor library by Adafruit"** está instalada.
+3.  Clique no botão verde **`▶️ Start Simulation`**.
+4.  Para testar a lógica, crie o **"cenário perfeito"** para a irrigação:
+    * Ajuste a umidade do **DHT22** para um valor **< 60%**.
+    * Ajuste a luz do **LDR** até o valor de pH no Monitor Serial ficar **entre 1500 e 2500**.
+    * **Não pressione nenhum botão**.
+    * ✅ **Resultado esperado:** A bomba (relé) deve ligar.
+5.  Agora, **pressione qualquer um dos botões** (N, P ou K).
+    * ❌ **Resultado esperado:** A bomba deve desligar, provando que o sistema de segurança está funcionando.
+
+---
+
+## 7. 👥 Equipe (FarmTech Solutions)
+
+* **Victor** - Engenheiro de Hardware e Lógica de Controle
+* **[Nome do Colega 1]** - [Função do Colega 1]
+* **[Nome do Colega 2]** - [Função do Colega 2]
