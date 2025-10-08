@@ -78,7 +78,7 @@ A imagem abaixo ilustra as conexões físicas entre o ESP32 e os componentes no 
 
 ## 7. 👥 Equipe (FarmTech Solutions)
 
-* **Victor Araujo Ferreira da Silva** - Engenheiro de softwere 
-* **Filipe Marques Previato** - Engenheiro de softwere 2
-* **Pedro Zanon Castro Santana** - Engenheiro de Hardwere
+* **Victor Araujo Ferreira da Silva** - Engenheiro de software 
+* **Filipe Marques Previato** - Engenheiro de software 2
+* **Pedro Zanon Castro Santana** - Engenheiro de Hardware
 * **Jonathan Gomes Ribeiro Franco** - tester/videomaker
